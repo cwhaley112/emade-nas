@@ -1,0 +1,132 @@
+<?xml version="1.0"?>
+
+<input>
+    <pythonConfig>
+        <pythonPath>/users/jmosby6-gtri/anaconda3/envs/pyemade/bin/python</pythonPath>
+        <emadePath>users/jmosby6-gtri/emade</emadePath>
+    </pythonConfig>
+    <dbConfig>
+        <server>10.80.14.228</server>
+        <username>joe</username>
+        <password>password</password>
+        <database>emade_titanic</database>
+        <reuse>1</reuse>
+    </dbConfig>
+    <datasets>
+        <dataset>
+            <name>FullDataSet</name>
+            <type>featuredata</type>
+            <MonteCarlo>
+                <trial>
+                    <trainFilename>datasets/test-datasets/single-objective/regression/rastrigin/train_0.csv.gz</trainFilename>
+                    <trainFilename>datasets/test-datasets/single-objective/regression/rastrigin/test_0.csv.gz</trainFilename>
+                </trial>
+            </MonteCarlo>
+        </dataset>
+    </datasets>
+
+    <objectives>
+        <objective>
+            <name>RMS Error</name>
+            <weight>-1.0</weight>
+            <achievable>100.0</achievable>
+            <goal>0</goal>
+            <evaluationFunction>objective0EvalFunction</evaluationFunction>
+            <lower>0</lower>
+            <upper>1</upper>
+        </objective>
+    </objectives>
+
+    <evaluation>
+        <module>evalFunctions</module>
+        <memoryLimit>30</memoryLimit> <!-- In Percent -->
+    </evaluation>
+    <gridEngineParameters>
+        <numHosts>15</numHosts>
+        <workersPerHost>3</workersPerHost>
+        <project>EOSL</project>
+        <queue>all.q</queue>
+        <parallelEnv>gtmoep</parallelEnv>
+    </gridEngineParameters>
+
+    <evolutionParameters>
+        <initialPopulationSize>512</initialPopulationSize>
+        <elitePoolSize>512</elitePoolSize>
+        <launchSize>300</launchSize>
+        <minQueueSize>200</minQueueSize>
+        <outlierPenalty>0.2</outlierPenalty>
+
+        <matings>
+            <mating>
+                <name>crossover</name>
+                <probability>0.50</probability>
+            </mating>
+            <mating>
+                <name>crossoverEphemeral</name>
+                <probability>0.50</probability>
+            </mating>
+            <mating>
+                <name>headlessChicken</name>
+                <probability>0.10</probability>
+            </mating>
+            <mating>
+                <name>headlessChickenEphemeral</name>
+                <probability>0.10</probability>
+            </mating>
+        </matings>
+
+        <mutations>
+            <mutation>
+                <name>insert</name>
+                <probability>0.05</probability>
+            </mutation>
+            <mutation>
+                <name>insert modify</name>
+                <probability>0.10</probability>
+            </mutation>
+            <mutation>
+                <name>ephemeral</name>
+                <probability>0.25</probability>
+            </mutation>
+            <mutation>
+                <name>node replace</name>
+                <probability>0.05</probability>
+            </mutation>
+            <mutation>
+                <name>uniform</name>
+                <probability>0.05</probability>
+            </mutation>
+            <mutation>
+                <name>shrink</name>
+                <probability>0.05</probability>
+            </mutation>
+        </mutations>
+
+        <selections>
+            <selection>
+                <name>NSGA2</name>
+            </selection>
+        </selections>
+
+    </evolutionParameters>
+	<seedFile>
+		<!-- <filename>saved_runs/terminated_may_1/lastParents.txt</filename> -->
+		<filename>testCode/pickledTrees.dat</filename>
+	</seedFile>
+
+    <genePoolFitness>
+        <prefix>genePoolFitnessAdult</prefix>
+    </genePoolFitness>
+    <paretoFitness>
+        <prefix>paretoFitnessAdult</prefix>
+    </paretoFitness>
+    <parentsOutput>
+        <prefix>parentsAdult</prefix>
+    </parentsOutput>
+
+    <paretoOutput>
+        <prefix>paretoFrontAdult</prefix>
+    </paretoOutput>
+
+    <regression>1</regression>
+</input>

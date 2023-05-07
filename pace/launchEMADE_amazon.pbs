@@ -1,0 +1,21 @@
+#PBS -N emade-job
+#PBS -l nodes=1:ppn=12:gpus=2
+#PBS -l pmem=2gb
+#PBS -l walltime=8:00:00
+#PBS -q pace-ice-gpu
+#PBS -j oe
+#PBS -o emade-amazon.out
+#PBS -M cburdell3@gatech.edu
+
+cd ~/emade
+echo "Started on `/bin/hostname`" # prints the name of the node job started on
+module load jdk/1.8.0_202
+module load openmpi/3.1.6
+module load gcc
+module load anaconda3/2020.02
+export CC=gcc
+export LD_LIBRARY_PATH="/usr/local/pace-apps/manual/packages/cuda/11.1/lib64"
+conda activate tf26 # this is my conda environment name, yours could be different
+
+echo "STARTING EMADE"
+python src/GPFramework/launchEMADE.py templates/input_amazon.xml # use your XML file

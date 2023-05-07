@@ -1,0 +1,1 @@
+Learner(Sentiment(ARG0, trueBool), learnerType('LOGR', {'penalty':0, 'C': 1.0}, 'SINGLE', None))

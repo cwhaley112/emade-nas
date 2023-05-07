@@ -1,0 +1,10 @@
+#!/bin/bash
+#PBS -N mysql-job
+#PBS -q pace-ice
+#PBS -l nodes=1:ppn=1
+#PBS -l walltime=8:00:00
+#PBS -j oe
+#PBS -o emade-mysql.out
+#PBS -M cburdell3@gatech.edu
+
+mysqld_safe --port=PORT_NUMBER --datadir='/storage/home/hpaceice1/cburdell3/scratch/db'

@@ -1,0 +1,50 @@
+#Compiled Files
+.vscode/
+*.pyc
+.DS_Store
+*.sublime-project
+*.sublime-workspace
+.idea/
+.ipynb_checkpoints
+*/.ipynb_checkpoints/*
+
+*.out
+*.err
+
+# Log Files
+pareto*.txt
+genePoolFitness*.txt
+parents*.txt
+out[0-9]*.txt
+err[0-9]*.txt
+hypervolume[0-9]*.txt
+*.o[0-9]*
+*.e[0-9]*
+*.swp
+*.db
+
+build/
+.vs/
+dist/
+GPFramework.egg-info/
+
+#vim
+*.un~
+*.xml~
+
+#EMADE instantiations
+myPickleFile[0-9]*.dat
+gridEngineJobSubmit_master[0-9]*.sh
+slurmEngineJobSubmit_master[0-9]*.sh
+paceEngineJobSubmit*.sh
+.gitignore~
+
+# personal PBS files
+my_pace/*
+
+# datasets
+*.npz
+metadata.txt
+Global_MODS
+db_info*.csv
+cache_opt_info*.txt

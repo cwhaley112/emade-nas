@@ -1,0 +1,4 @@
+/users/jzutty3/Code/emade_emade/myPickleFile19973.dat
+/users/jzutty3/Code/emade_emade/paretoFrontTitanic26277.txt
+/users/jrick6-gtri/emade/datasets/titanic2/train_0.csv.gz,/users/jrick6-gtri/emade/datasets/titanic2/test_0.csv.gz
+/users/jrick6-gtri/emade/processed_truth.csv.gz

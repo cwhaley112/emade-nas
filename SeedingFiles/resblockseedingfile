@@ -1,0 +1,1 @@
+NNLearner(ARG0,OutputLayer(ResBlock(512, ResBlock(256, ResBlock(128, ResBlock(64, InputLayer()))))   )), 100, AdamOptimizer)

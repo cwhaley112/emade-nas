@@ -1,0 +1,1 @@
+CopyStreamToTarget(CenterOfMass(ThresholdBinary(ARG0, 1, 0.2, 255), 1))

@@ -1,0 +1,190 @@
+<?xml version="1.0"?>
+<input>
+    <pythonConfig>
+        <localPythonCommand>python</localPythonCommand> <!--e.g. python3 -->
+        <gridPythonPath>/users/flascari3-gtri/anaconda3/envs/work/bin/python</gridPythonPath>
+      <slurmPythonPathMaster>/home/flascari3-gtri/.conda/envs/work/bin/python</slurmPythonPathMaster>
+      <slurmPythonPathWorker>/home/flascari3-gtri/.conda/envs/work/bin/python</slurmPythonPathWorker>
+    </pythonConfig>
+    <dbConfig>
+        <server>10.80.14.227</server>
+        <username>root</username>
+        <password>password</password>
+        <database>largeelitetwo</database>
+        <reuse>1</reuse>
+    </dbConfig>
+    <cacheConfig>
+        <useCache>false</useCache>
+        <masterWaitTime>60</masterWaitTime>
+        <central>true</central>
+        <compression>false</compression>
+        <cacheLimit>10000000</cacheLimit>
+        <timeThreshold>0</timeThreshold>
+        <timeout>3000</timeout>
+    </cacheConfig>
+    <datasets>
+        <dataset>
+            <name>FullDataSet</name>
+            <type>rec_data</type>
+            <reduceInstances>1</reduceInstances>
+            <regression>true</regression>
+            <MonteCarlo>
+                <trial>
+                    <trainFilename>datasets/rec_data/train_rec.npz</trainFilename>
+                    <testFilename>datasets/rec_data/test_rec.npz</testFilename>
+                </trial>
+            </MonteCarlo>
+        </dataset>
+    </datasets>
+
+    <objectives>
+        <!-- TODO: put in Multilabel Objectives -->
+        <!-- <objective>
+            <name>RMS Error</name>
+            <weight>-1.0</weight>
+            <achievable>0.25</achievable>
+            <goal>0</goal>
+            <evaluationFunction>objective0EvalFunction</evaluationFunction>
+            <lower>0</lower>
+            <upper>1</upper>
+        </objective>
+
+        <objective>
+            <name>Accuracy Score</name>
+            <weight>-1.0</weight>
+            <achievable>0.2</achievable>
+            <goal>0</goal>
+            <evaluationFunction>multilabel_accuracy_score</evaluationFunction>
+            <lower>0</lower>
+            <upper>1</upper>
+        </objective> -->
+        <objective>
+            <name>Accuracy Score</name>
+            <weight>-1.0</weight>
+            <achievable>0.2</achievable>
+            <goal>0</goal>
+            <evaluationFunction>accuracy_score</evaluationFunction>
+            <lower>0</lower>
+            <upper>1</upper>
+        </objective>
+
+        <objective>
+            <name>Num Parameters</name>
+            <weight>-1.0</weight>
+            <achievable>100.0</achievable>
+            <goal>0</goal>
+            <evaluationFunction>num_params</evaluationFunction>
+            <lower>0</lower>
+            <upper>1000000000</upper>
+        </objective>
+        
+    </objectives>
+
+    <evaluation>
+        <module>eval_methods</module>
+        <memoryLimit>24000</memoryLimit> <!-- In Percent,  -->
+    </evaluation>
+    <localRunParameters>
+        <workersPerHost>1</workersPerHost>
+    </localRunParameters>
+    <slurmEngineParameters>
+        <numHosts>3</numHosts>
+        <workersPerHost>3</workersPerHost>
+          <jobName>emade.rec</jobName>
+          <runtime>5-01:00</runtime> <!--Optional runtime in D-HH:MM -->
+          <modules>anaconda3/2020.2 cuda/10</modules> <!--space delimited list of module names -->
+        <otherHardwareRequestString></otherHardwareRequestString> <!--e.g request specific GPU-->
+          <memoryToAlloc>24</memoryToAlloc> <!--mem-per-cpu in GB-->
+        <specificNode></specificNode>
+        <anacondaEnvironmentMaster>emade</anacondaEnvironmentMaster>
+        <anacondaEnvironmentWorker>emade</anacondaEnvironmentWorker>
+        <numberOfGPUs>3</numberOfGPUs>
+    </slurmEngineParameters>
+    <gridEngineParameters>
+        <numHosts>15</numHosts>
+        <workersPerHost>3</workersPerHost>
+        <project>EOSL</project>
+        <queue>all.q</queue>
+        <parallelEnv>emade</parallelEnv>
+    </gridEngineParameters>
+    <evolutionParameters>
+        <initialPopulationSize>512</initialPopulationSize>
+        <elitePoolSize>512</elitePoolSize>
+        <launchSize>300</launchSize>
+          <minQueueSize>200</minQueueSize>
+        <outlierPenalty>0.2</outlierPenalty>
+
+        <matings>
+            <mating>
+                <name>crossover</name>
+                <probability>0.50</probability>
+            </mating>
+            <mating>
+                <name>crossoverEphemeral</name>
+                <probability>0.50</probability>
+            </mating>
+            <mating>
+                <name>headlessChicken</name>
+                <probability>0.10</probability>
+            </mating>
+            <mating>
+                <name>headlessChickenEphemeral</name>
+                <probability>0.10</probability>
+            </mating>
+        </matings>
+
+        <mutations>
+            <mutation>
+                <name>insert</name>
+                <probability>0.5</probability>
+            </mutation>
+            <mutation>
+                <name>insert modify</name>
+                <probability>0.10</probability>
+            </mutation>
+            <mutation>
+                <name>ephemeral</name>
+                <probability>0.25</probability>
+            </mutation>
+            <mutation>
+                <name>node replace</name>
+                <probability>0.5</probability>
+            </mutation>
+            <mutation>
+                <name>uniform</name>
+                <probability>0.05</probability>
+            </mutation>
+            <mutation>
+                <name>shrink</name>
+                <probability>0.05</probability>
+            </mutation>
+        </mutations>
+
+        <selections>
+            <selection>
+                <name>sel_nsga2</name>
+            </selection>
+        </selections>
+
+    </evolutionParameters>
+    <seedFile>
+        <!-- <filename>saved_runs/terminated_may_1/lastParents.txt</filename> -->
+        <!-- <filename>testCode/pickledTrees.dat</filename> -->
+    </seedFile>
+
+    <genePoolFitness>
+        <prefix>genePoolFitnessRec</prefix>
+    </genePoolFitness>
+    <paretoFitness>
+        <prefix>paretoFitnessRec</prefix>
+    </paretoFitness>
+    <parentsOutput>
+        <prefix>parentsRec</prefix>
+    </parentsOutput>
+
+
+
+    <paretoOutput>
+        <prefix>paretoFrontRec</prefix>
+    </paretoOutput>
+</input>

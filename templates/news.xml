@@ -1,0 +1,203 @@
+<?xml version="1.0"?>
+
+<input>
+    <pythonConfig>
+        <localPythonCommand>python</localPythonCommand> <!--e.g. python3 -->
+        <gridPythonPath>/users/rkan3-gtri/anaconda3/envs/envEMADE/bin/python</gridPythonPath>
+      <slurmPythonPathMaster>/home/rkan3-gtri/.conda/envs/envEMADE/bin/python</slurmPythonPathMaster>
+      <slurmPythonPathWorker>/home/rkan3-gtri/.conda/envs/envEMADE/bin/python</slurmPythonPathWorker>
+    </pythonConfig>
+    <dbConfig>
+	<server>10.80.14.148</server>
+        <!--<server>10.80.14.148</server>-->
+	<!--<server>localhost</server>-->
+        <username>root</username>
+        <password>ENTER_SQL_PASSWORD</password>
+        <!--<database>nlp_text_classification</database>-->
+        <database>news</database>
+        <reuse>1</reuse>
+    </dbConfig>
+    <cacheConfig>
+        <useCache>false</useCache>
+        <central>true</central>
+        <compression>false</compression>
+        <cacheLimit>10000000</cacheLimit>
+        <timeThreshold>0</timeThreshold>
+        <timeout>300</timeout>
+    </cacheConfig>
+    <datasets>
+        <dataset>
+            <name>FullDataSet</name>
+            <type>textdata</type>
+            <MonteCarlo>
+                <trial>
+                    <trainFilename>datasets/news/train1.csv.gz</trainFilename>
+                    <testFilename>datasets/news/test1.csv.gz</testFilename>
+                </trial>
+                <trial>
+                    <trainFilename>datasets/news/train2.csv.gz</trainFilename>
+                    <testFilename>datasets/news/test2.csv.gz</testFilename>
+                </trial>
+                <trial>
+                    <trainFilename>datasets/news/train3.csv.gz</trainFilename>
+                    <testFilename>datasets/news/test3.csv.gz</testFilename>
+                </trial>
+                <trial>
+                    <trainFilename>datasets/news/train4.csv.gz</trainFilename>
+                    <testFilename>datasets/news/test4.csv.gz</testFilename>
+                </trial>
+            </MonteCarlo>
+        </dataset>
+    </datasets>
+
+    <objectives>
+        <objective>
+            <name>RMS Error</name>
+            <weight>-1.0</weight>
+            <achievable>0.25</achievable>
+            <goal>0</goal>
+            <evaluationFunction>objective0EvalFunction</evaluationFunction>
+            <lower>0</lower>
+            <upper>1000</upper>
+        </objective>
+        <objective>
+            <name>Accuracy Score</name>
+            <weight>-1.0</weight>
+            <achievable>0.2</achievable>
+            <goal>0</goal>
+            <evaluationFunction>accuracy_score</evaluationFunction>
+            <lower>0</lower>
+            <upper>1</upper>
+        </objective>
+
+        <!--<objective>
+            <name>Length</name>
+            <weight>-1.0</weight>
+            <achievable>10.0</achievable>
+            <goal>0</goal>
+            <evaluationFunction>depth_breadth_eval_function</evaluationFunction>
+        </objective>-->
+
+        <objective>
+            <name>Num Elements</name>
+            <weight>-1.0</weight>
+            <achievable>100.0</achievable>
+            <goal>0</goal>
+            <evaluationFunction>num_elements_eval_function</evaluationFunction>
+            <lower>10</lower>
+            <upper>100</upper>
+        </objective>
+
+    </objectives>
+
+    <evaluation>
+        <module>eval_methods</module>
+        <memoryLimit>30</memoryLimit> <!-- In Percent,  -->
+    </evaluation>
+    <localRunParameters>
+        <workersPerHost>5</workersPerHost>
+    </localRunParameters>
+    <slurmEngineParameters>
+        <numHosts>3</numHosts>
+        <workersPerHost>3</workersPerHost>
+          <jobName>vip.news</jobName>
+          <runtime>6-01:00</runtime> <!--Optional runtime in D-HH:MM -->
+          <!--<modules>python/3.7.3 anaconda3/4.4.0 cuda/9</modules>--> <!--space delimited list of module names --> 
+	  <modules>anaconda3/4.4.0 cuda/9</modules> <!--space delimited list of module names -->
+
+        <otherHardwareRequestString></otherHardwareRequestString> <!--e.g request specific GPU-->
+          <memoryToAlloc>8</memoryToAlloc> <!--mem-per-cpu in GB-->
+        <specificNode></specificNode>
+        <anacondaEnvironmentMaster>envEMADE</anacondaEnvironmentMaster>
+        <anacondaEnvironmentWorker>envEMADE</anacondaEnvironmentWorker>
+        <numberOfGPUs>1</numberOfGPUs>
+    </slurmEngineParameters>
+    <gridEngineParameters>
+        <numHosts>15</numHosts>
+        <workersPerHost>3</workersPerHost>
+        <project>EOSL</project>
+        <queue>all.q</queue>
+        <parallelEnv>emade</parallelEnv>
+    </gridEngineParameters>
+
+    <evolutionParameters>
+        <initialPopulationSize>512</initialPopulationSize>
+        <elitePoolSize>512</elitePoolSize>
+        <launchSize>300</launchSize>
+          <minQueueSize>200</minQueueSize>
+        <outlierPenalty>0.2</outlierPenalty>
+
+        <matings>
+            <mating>
+                <name>crossover</name>
+                <probability>0.50</probability>
+            </mating>
+            <mating>
+                <name>crossoverEphemeral</name>
+                <probability>0.50</probability>
+            </mating>
+            <mating>
+                <name>headlessChicken</name>
+                <probability>0.10</probability>
+            </mating>
+            <mating>
+                <name>headlessChickenEphemeral</name>
+                <probability>0.10</probability>
+            </mating>
+        </matings>
+
+        <mutations>
+            <mutation>
+                <name>insert</name>
+                <probability>0.05</probability>
+            </mutation>
+            <mutation>
+                <name>insert modify</name>
+                <probability>0.10</probability>
+            </mutation>
+            <mutation>
+                <name>ephemeral</name>
+                <probability>0.25</probability>
+            </mutation>
+            <mutation>
+                <name>node replace</name>
+                <probability>0.05</probability>
+            </mutation>
+            <mutation>
+                <name>uniform</name>
+                <probability>0.05</probability>
+            </mutation>
+            <mutation>
+                <name>shrink</name>
+                <probability>0.05</probability>
+            </mutation>
+        </mutations>
+
+        <selections>
+            <selection>
+                <name>sel_nsga2</name>
+            </selection>
+        </selections>
+
+    </evolutionParameters>
+    <seedFile>
+        <!-- <filename>saved_runs/terminated_may_1/lastParents.txt</filename> -->
+        <!-- <filename>testCode/pickledTrees.dat</filename> -->
+    </seedFile>
+
+    <genePoolFitness>
+        <prefix>genePoolFitnessNews</prefix>
+    </genePoolFitness>
+    <paretoFitness>
+        <prefix>paretoFitnessNews</prefix>
+    </paretoFitness>
+    <parentsOutput>
+        <prefix>parentsNews</prefix>
+    </parentsOutput>
+
+
+
+    <paretoOutput>
+        <prefix>paretoFrontMovieReviews</prefix>
+    </paretoOutput>
+</input>

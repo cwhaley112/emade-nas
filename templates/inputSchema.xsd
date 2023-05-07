@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+<xs:element name="input">
+    <xs:complexType>
+        <xs:sequence>
+            <xs:element name="pythonConfig">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="localPythonCommand" type="xs:string" minOccurs="0" maxOccurs="1"/>
+			            <xs:element name="gridPythonPath" type="xs:string" minOccurs="0" maxOccurs="1"/>
+			            <xs:element name="slurmPythonPathMaster" type="xs:string" minOccurs="0" maxOccurs="1"/>
+			            <xs:element name="slurmPythonPathWorker" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                        <xs:element name="pacePythonPath" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="dbConfig">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="server" type="xs:string" />
+                        <xs:element name="username" type="xs:string" />
+                        <xs:element name="password" type="xs:string" />
+                        <xs:element name="database" type="xs:string" />
+                        <xs:element name="reuse" type="xs:integer" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="cacheConfig">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="useCache" type="xs:boolean" />
+                        <xs:element name="masterWaitTime" type="xs:integer" />
+                        <xs:element name="central" type="xs:boolean" minOccurs="0" />
+                        <xs:element name="compression" type="xs:boolean"/>
+                        <xs:element name="cacheLimit" type="xs:integer" minOccurs="0"/>
+                        <xs:element name="timeThreshold" type="xs:float" minOccurs="0"/>
+                        <xs:element name="timeout" type="xs:integer" minOccurs="0"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="datasets">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="dataset" maxOccurs="unbounded">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="name" type="xs:string" />
+                                    <xs:element name="type" type="xs:string" />
+                                    <xs:element name="multilabel" type="xs:boolean" minOccurs="0" maxOccurs="1"/>
+                                    <xs:element name="reduceInstances" type="xs:float" minOccurs="0" maxOccurs="1"/>
+                                    <xs:element name="pickle" type="xs:boolean" minOccurs="0" maxOccurs="1"/>
+                                    <xs:element name="batchSize" type="xs:integer" minOccurs="0" maxOccurs="1"/>
+                                    <xs:element name="MonteCarlo">
+                                        <xs:complexType>
+                                            <xs:sequence>
+                                                <xs:element name="trial" maxOccurs="unbounded">
+                                                    <xs:complexType>
+                                                        <xs:sequence>
+                                                            <xs:element name="trainFilename" type="xs:string" />
+                                                            <xs:element name="testFilename" type="xs:string" />
+                                                        </xs:sequence>
+                                                    </xs:complexType>
+                                                </xs:element>
+                                            </xs:sequence>
+                                        </xs:complexType>
+                                    </xs:element>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:element name="objectives">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="objective" maxOccurs="unbounded">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="name" type="xs:string" />
+                                    <xs:element name="weight" type="xs:decimal" />
+                                    <xs:element name="achievable" type="xs:decimal" />
+                                    <xs:element name="goal" type="xs:decimal" />
+                                    <xs:element name="evaluationFunction" type="xs:string" />
+                                    <xs:element name="lower" type="xs:decimal" />
+                                    <xs:element name="upper" type="xs:decimal" />
+                                    <xs:element name="args" minOccurs="0" maxOccurs="1">
+                                        <xs:complexType>
+                                            <xs:sequence>
+                                                <xs:element name="arg" maxOccurs="unbounded">
+                                                    <xs:complexType>
+                                                        <xs:sequence>
+                                                            <xs:element name="name" type="xs:string" />
+                                                            <xs:element name="value" type="xs:string" />
+                                                            <xs:element name="type">
+                                                              <xs:simpleType>
+                                                                <xs:restriction base="xs:string">
+                                                                        <xs:enumeration value="int"/>
+                                                                        <xs:enumeration value="float"/>
+                                                                        <xs:enumeration value="str"/>
+                                                                </xs:restriction>
+                                                              </xs:simpleType>
+                                                            </xs:element>
+                                                        </xs:sequence>
+                                                    </xs:complexType>
+                                                </xs:element>
+                                            </xs:sequence>
+                                        </xs:complexType>
+                                    </xs:element>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:element name="statistics" minOccurs="0" maxOccurs="1">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="statistic" minOccurs="0" maxOccurs="unbounded">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="name" type="xs:string" />
+                                    <xs:element name="function" type="xs:string" />
+                                    <xs:element name="type">
+                                      <xs:simpleType>
+                                        <xs:restriction base="xs:string">
+                                                <xs:enumeration value="int"/>
+                                                <xs:enumeration value="long"/>
+                                                <xs:enumeration value="float"/>
+                                                <xs:enumeration value="object"/>
+                                        </xs:restriction>
+                                      </xs:simpleType>
+                                    </xs:element>
+                                    <xs:element name="useDynamicArgs" minOccurs="0" maxOccurs="1" type="xs:boolean" />
+                                    <xs:element name="args" minOccurs="0" maxOccurs="1">
+                                        <xs:complexType>
+                                            <xs:sequence>
+                                                <xs:element name="arg" minOccurs="0" maxOccurs="unbounded">
+                                                    <xs:complexType>
+                                                        <xs:sequence>
+                                                            <xs:element name="name" type="xs:string" />
+                                                            <xs:element name="val" type="xs:string" />
+                                                        </xs:sequence>
+                                                    </xs:complexType>
+                                                </xs:element>
+                                            </xs:sequence>
+                                        </xs:complexType>
+                                    </xs:element>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:element name="evaluation">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="module" type="xs:string" />
+                        <xs:element name="memoryLimit" type="xs:integer" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:element name="localRunParameters">
+                <xs:complexType>
+                    <xs:sequence>
+                    <xs:element name="workersPerHost" type="xs:integer" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:element name="paceEngineParameters" minOccurs="0" maxOccurs="1">
+                <xs:complexType>
+                        <xs:sequence>
+                                <xs:element name="queue" type="xs:string" />
+                                <xs:element name="walltime" type="xs:string" />
+                                <xs:element name="modules" type="xs:string" />
+                                <xs:element name="numHosts" type="xs:integer" />
+                                <xs:element name="workersPerHost" type="xs:integer" />
+                                <xs:element name="ramPerHostCPU" type="xs:string" />
+                                <xs:element name="ramPerMasterCPU" type="xs:string" />
+                        </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            
+            <xs:element name="slurmEngineParameters">
+                <xs:complexType>
+                    <xs:sequence>
+						<xs:element name="numHosts" type="xs:integer" />
+                        <xs:element name="workersPerHost" type="xs:integer" />
+                        <xs:element name="jobName" type="xs:string" />
+                        <xs:element name="runtime" type="xs:string" />
+                        <xs:element name="modules" type="xs:string" />
+                        <xs:element name="otherHardwareRequestString" type="xs:string" />
+                        <xs:element name="memoryToAlloc" type="xs:float" />
+                        <xs:element name="specificNode" type="xs:string"/>
+                        <xs:element name="anacondaEnvironmentMaster" type="xs:string"/>
+                        <xs:element name="anacondaEnvironmentWorker" type="xs:string"/>
+                        <xs:element name="numberOfGPUs" type="xs:integer" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:element name="gridEngineParameters">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="numHosts" type="xs:integer" />
+                        <xs:element name="workersPerHost" type="xs:integer" />
+                        <xs:element name="project" type="xs:string" />
+                        <xs:element name="queue" type="xs:string" />
+                        <xs:element name="parallelEnv" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:element name="evolutionParameters">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="initialPopulationSize" type="xs:integer" />
+                        <xs:element name="elitePoolSize" type="xs:integer" />
+                        <xs:element name="launchSize" type="xs:integer" />
+                        <xs:element name="minQueueSize" type="xs:integer" />
+                        <xs:element name="outlierPenalty" type="xs:decimal"/>
+
+                        <xs:element name="matings">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="mating" maxOccurs="unbounded" type="rateType" />
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+
+                        <xs:element name="mutations">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="mutation" maxOccurs="unbounded" type="rateType" />
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+
+                        <xs:element name="selections">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="selection" maxOccurs="unbounded">
+                                        <xs:complexType>
+                                            <xs:sequence>
+                                                <xs:element name="name" type="xs:string" />
+                                                <xs:element name="useDynamicArgs" minOccurs="0" maxOccurs="1" type="xs:boolean" />
+                                                <xs:element name="args" minOccurs="0" maxOccurs="1">
+                                                    <xs:complexType>
+                                                        <xs:sequence>
+                                                            <xs:element name="arg" minOccurs="0" maxOccurs="unbounded">
+                                                                <xs:complexType>
+                                                                    <xs:sequence>
+                                                                        <xs:element name="name" type="xs:string" />
+                                                                        <xs:element name="val" type="xs:string" />
+                                                                    </xs:sequence>
+                                                                </xs:complexType>
+                                                            </xs:element>
+                                                        </xs:sequence>
+                                                    </xs:complexType>
+                                                </xs:element>
+                                            </xs:sequence>
+                                        </xs:complexType>
+                                    </xs:element>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:element name="seedFile">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="filename" type="xs:string" minOccurs="0"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:element name="genePoolFitness" type="outputType" />
+            <xs:element name="paretoFitness" type="outputType" />
+            <xs:element name="parentsOutput" type="outputType" />
+            <xs:element name="paretoOutput" type="outputType" />
+            <xs:element name="regression" type="xs:string" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:element>
+
+<xs:complexType name="outputType">
+    <xs:sequence>
+        <xs:element name="prefix" type="xs:string" />
+    </xs:sequence>
+</xs:complexType>
+<xs:complexType name="rateType">
+    <xs:sequence>
+        <xs:element name="name" type="xs:string" />
+        <xs:element name="probability" type="xs:decimal" />
+    </xs:sequence>
+</xs:complexType>
+
+</xs:schema>

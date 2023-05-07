@@ -1,0 +1,1 @@
+Learner(ARG0, LearnerType('RAND_FOREST', {'n_estimators': 100, 'criterion':0, 'max_depth': 3, 'class_weight':0}), EnsembleType('SINGLE', None))

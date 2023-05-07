@@ -1,0 +1,232 @@
+<?xml version="1.0"?>
+
+<input>
+    <pythonConfig>
+        <localPythonCommand>python</localPythonCommand> <!--e.g. python3 -->
+        <gridPythonPath>/users/USER/anaconda3/envs/ENVIRO_NAME/bin/python</gridPythonPath>
+        <slurmPythonPathMaster>/home/USER/.conda/envs/ENVIRO_NAME/bin/python</slurmPythonPathMaster>
+        <slurmPythonPathWorker>/home/USER/.conda/envs/ENVIRO_NAME/bin/python</slurmPythonPathWorker>
+        <pacePythonPath>~/.conda/envs/ENVIRO_NAME/bin/python</pacePythonPath>
+    </pythonConfig>
+    <dbConfig>
+        <server></server>
+        <username></username>
+        <password></password>
+        <database></database>
+        <reuse>0</reuse>
+    </dbConfig>
+    <cacheConfig>
+        <useCache>false</useCache>
+        <masterWaitTime>60</masterWaitTime>
+        <central>true</central>
+        <compression>false</compression>
+        <cacheLimit>10000000</cacheLimit>
+        <timeThreshold>0</timeThreshold>
+        <timeout>300</timeout>
+    </cacheConfig>
+    <datasets>
+        <dataset>
+            <name>smallFitness</name>
+            <type>streamdata</type>
+            <multilabel>0</multilabel>
+            <reduceInstances>1.0</reduceInstances>
+            <MonteCarlo>
+                <trial>
+                    <trainFilename>datasets/lidar/fine_depths_my_data1_filtered_small.csv.gz</trainFilename>
+                    <testFilename>datasets/lidar/fine_depths_my_data2_filtered_small.csv.gz</testFilename>
+                </trial>
+            </MonteCarlo>
+        </dataset>
+<!--        <dataset>
+            <name>smallFitness2</name>
+            <trainFilename>testCode/my_data1.csv</trainFilename>
+            <testFilename>testCode/my_data2.csv</testFilename>
+        </dataset> -->
+<!--        <dataset>
+            <name>mediumFitness</name>
+            <trainFilename>testCode/adultdatabaseMED.tab</trainFilename>
+            <testFilename>testCode/adulttestdatabaseMED.tab</testFilename>
+        </dataset>
+        <dataset>
+            <name>largeFitness</name>
+            <trainFilename>testCode/adultdatabase.tab</trainFilename>
+            <testFilename>testCode/adulttestdatabase.tab</testFilename>
+        </dataset> -->
+    </datasets>
+
+    <objectives>
+        <objective>
+            <name>RMS Error</name>
+            <weight>-1.0</weight>
+            <achievable>0.4</achievable>
+            <goal>0.25</goal>
+            <evaluationFunction>objective0EvalFunction</evaluationFunction>
+            <lower>0</lower>
+            <upper>1</upper>
+        </objective>
+        <objective>
+            <name>Under Prediction</name>
+            <weight>-1.0</weight>
+            <achievable>0.3</achievable>
+            <goal>0.15</goal>
+            <evaluationFunction>objective1EvalFunction</evaluationFunction>
+            <lower>0</lower>
+            <upper>1</upper>
+        </objective>
+        <objective>
+            <name>Over Prediction</name>
+            <weight>-1.0</weight>
+            <achievable>0.25</achievable>
+            <goal>0.1</goal>
+            <evaluationFunction>objective2EvalFunction</evaluationFunction>
+            <lower>0</lower>
+            <upper>1</upper>
+        </objective>
+        <objective>
+            <name>Num Elements</name>
+            <weight>-1.0</weight>
+            <achievable>100.0</achievable>
+            <goal>0</goal>
+            <evaluationFunction>num_elements_eval_function</evaluationFunction>
+            <lower>0</lower>
+            <upper>1</upper>
+        </objective>
+        <objective>
+            <name>Probability of Miss</name>
+            <weight>-1.0</weight>
+            <achievable>0.02</achievable>
+            <goal>0.005</goal>
+            <evaluationFunction>objective4EvalFunction</evaluationFunction>
+            <lower>0</lower>
+            <upper>1</upper>
+        </objective>
+        <objective>
+            <name>Percent Error</name>
+            <weight>-1.0</weight>
+            <achievable>0.02</achievable>
+            <goal>0.005</goal>
+            <evaluationFunction>objective5EvalFunction</evaluationFunction>
+            <lower>0</lower>
+            <upper>1</upper>
+        </objective>
+    </objectives>
+
+    <evaluation>
+        <module>eval_methods</module>
+        <memoryLimit>7680</memoryLimit> <!-- In MB -->
+    </evaluation>
+
+    <localRunParameters>
+        <workersPerHost>5</workersPerHost>
+    </localRunParameters>
+
+    <paceEngineParameters>
+        <queue>pace-ice</queue> <!--pace-ice is default, pace-ice-gpu to use V100s. NOTE: This will force your workersPerHost value to 1 to prevent them from competing for same hardware-->
+        <walltime>8:00:00</walltime> <!-- 8 hours is the limit as of Fall 2021 -->
+        <modules>jdk/1.8.0_202 openmpi/3.1.6 gcc anaconda3/2020.02 cuda/11.1</modules> <!--space delimited list of module names -->
+        <numHosts>2</numHosts>
+        <workersPerHost>4</workersPerHost>
+        <ramPerHostCPU>8GB</ramPerHostCPU>
+        <ramPerMasterCPU>8GB</ramPerMasterCPU>
+    </paceEngineParameters>
+
+    <slurmEngineParameters>
+        <numHosts>3</numHosts>
+        <workersPerHost>3</workersPerHost>
+        <jobName>emade.titanic</jobName>
+        <runtime></runtime> <!--Optional runtime in D-HH:MM -->
+        <modules>python/3.6.1 anaconda3/4.4.0 cuda/9</modules> <!--space delimited list of module names -->
+        <otherHardwareRequestString></otherHardwareRequestString> <!--e.g request specific GPU-->
+        <memoryToAlloc>8</memoryToAlloc> <!--mem-per-cpu in GB-->
+        <specificNode></specificNode>
+        <anacondaEnvironmentMaster>ten</anacondaEnvironmentMaster>
+        <anacondaEnvironmentWorker>cpu</anacondaEnvironmentWorker>
+        <numberOfGPUs>1</numberOfGPUs>
+    </slurmEngineParameters>
+
+    <gridEngineParameters>
+            <numHosts>4</numHosts>
+            <workersPerHost>3</workersPerHost>
+            <project>EOSL</project>
+            <queue>all.q</queue>
+            <parallelEnv>emade</parallelEnv>
+        </gridEngineParameters>
+
+    <evolutionParameters>
+        <initialPopulationSize>512</initialPopulationSize>
+        <elitePoolSize>512</elitePoolSize>
+        <launchSize>200</launchSize>
+        <minQueueSize>100</minQueueSize>
+        <outlierPenalty>0.2</outlierPenalty>
+        <matings>
+            <mating>
+                <name>crossover</name>
+                <probability>0.50</probability>
+            </mating>
+            <mating>
+                <name>crossoverEphemeral</name>
+                <probability>0.50</probability>
+            </mating>
+            <mating>
+                <name>headlessChicken</name>
+                <probability>0.10</probability>
+            </mating>
+            <mating>
+                <name>headlessChickenEphemeral</name>
+                <probability>0.10</probability>
+            </mating>
+        </matings>
+
+        <mutations>
+            <mutation>
+                <name>insert</name>
+                <probability>0.05</probability>
+            </mutation>
+            <mutation>
+                <name>insert modify</name>
+                <probability>0.05</probability>
+            </mutation>
+            <mutation>
+                <name>ephemeral</name>
+                <probability>0.25</probability>
+            </mutation>
+            <mutation>
+                <name>node replace</name>
+                <probability>0.05</probability>
+            </mutation>
+            <mutation>
+                <name>uniform</name>
+                <probability>0.05</probability>
+            </mutation>
+            <mutation>
+                <name>shrink</name>
+                <probability>0.05</probability>
+            </mutation>
+        </mutations>
+
+        <selections>
+            <selection>
+                <name>NSGA2</name>
+            </selection>
+        </selections>
+    </evolutionParameters>
+
+    <seedFile>
+        <!-- <filename>saved_runs/terminated_may_1/lastParents.txt</filename> -->
+        <filename>testCode/pickledTrees.dat</filename>
+    </seedFile>
+
+    <genePoolFitness>
+        <prefix>genePoolFitnessAdult</prefix>
+    </genePoolFitness>
+    <paretoFitness>
+        <prefix>paretoFitnessAdult</prefix>
+    </paretoFitness>
+    <parentsOutput>
+        <prefix>parentsAdult</prefix>
+    </parentsOutput>
+    <paretoOutput>
+        <prefix>paretoFitness</prefix>
+    </paretoOutput>
+    <regression>1</regression>
+</input>

@@ -1,0 +1,307 @@
+<?xml version="1.0"?>
+
+<input>
+	<pythonConfig>
+        <pythonPath>/users/jrick6-gtri/anaconda3/envs/python36/bin/python</pythonPath>
+        <emadePath>users/jrick6-gtri/bathemade</emadePath>
+    </pythonConfig>
+		<dbConfig>
+        	<server></server>
+        	<username></username>
+        	<password></password>
+        	<database></database>
+        	<reuse>1</reuse>
+    	</dbConfig>
+			<cacheConfig>
+				<useCache>false</useCache>
+				<masterWaitTime>60</masterWaitTime>
+				<central>true</central>
+				<compression>false</compression>
+				<cacheLimit>10000000</cacheLimit>
+				<timeThreshold>0</timeThreshold>
+			</cacheConfig>
+	<datasets>
+		<dataset>
+			<name>SmallDataSet</name>
+			<type>streamdata</type>
+			<MonteCarlo>
+				<trial>
+					<trainFilename>datasets/post_lidar_trigger_good/small_train.csv.gz</trainFilename>
+					<testFilename>datasets/post_lidar_trigger_good/small_test.csv.gz</testFilename>
+				</trial>
+			</MonteCarlo>
+		</dataset>
+		<dataset>
+			<name>FullDataSet</name>
+			<type>streamdata</type>
+			<MonteCarlo>
+				<trial>
+					<trainFilename>datasets/post_lidar_trigger_good/train_0.csv.gz</trainFilename>
+					<testFilename>datasets/post_lidar_trigger_good/test_0.csv.gz</testFilename>
+				</trial>
+				<trial>
+					<trainFilename>datasets/post_lidar_trigger_good/train_1.csv.gz</trainFilename>
+					<testFilename>datasets/post_lidar_trigger_good/test_1.csv.gz</testFilename>
+				</trial>
+				<trial>
+					<trainFilename>datasets/post_lidar_trigger_good/train_2.csv.gz</trainFilename>
+					<testFilename>datasets/post_lidar_trigger_good/test_2.csv.gz</testFilename>
+				</trial>
+				<trial>
+					<trainFilename>datasets/post_lidar_trigger_good/train_3.csv.gz</trainFilename>
+					<testFilename>datasets/post_lidar_trigger_good/test_3.csv.gz</testFilename>
+				</trial>
+				<trial>
+					<trainFilename>datasets/post_lidar_trigger_good/train_4.csv.gz</trainFilename>
+					<testFilename>datasets/post_lidar_trigger_good/test_4.csv.gz</testFilename>
+				</trial>
+			</MonteCarlo>
+		</dataset>
+<!--		<dataset>
+			<name>smallFitness2</name>
+			<trainFilename>testCode/my_data1.csv</trainFilename>
+			<testFilename>testCode/my_data2.csv</testFilename>
+		</dataset> -->
+<!--		<dataset>
+			<name>mediumFitness</name>
+			<trainFilename>testCode/adultdatabaseMED.tab</trainFilename>
+			<testFilename>testCode/adulttestdatabaseMED.tab</testFilename>
+		</dataset>
+		<dataset>
+			<name>largeFitness</name>
+			<trainFilename>testCode/adultdatabase.tab</trainFilename>
+			<testFilename>testCode/adulttestdatabase.tab</testFilename>
+		</dataset> -->
+	</datasets>
+
+	<objectives>
+
+		<!--<objective>-->
+			<!--<name>RMS Error</name>-->
+			<!--<weight>-1.0</weight>-->
+			<!--<achievable>0.4</achievable>-->
+			<!--<goal>0.25</goal>-->
+			<!--<evaluationFunction>objective0EvalFunction</evaluationFunction>-->
+			<!--<lower>0</lower>-->
+            <!--<upper>1</upper>-->
+		<!--</objective>-->
+
+		<objective>
+			<name>Valid RMS Error</name>
+			<weight>-1.0</weight>
+			<achievable>0.4</achievable>
+			<goal>0.05</goal>
+			<evaluationFunction>objective7EvalFunction</evaluationFunction>
+			<lower>0</lower>
+            <upper>1</upper>
+		</objective>
+
+		<!--<objective>-->
+			<!--<name>Over Prediction</name>-->
+			<!--<weight>-1.0</weight>-->
+			<!--<achievable>0.3</achievable>-->
+			<!--<goal>0.15</goal>-->
+			<!--<evaluationFunction>objective1EvalFunction</evaluationFunction>-->
+			<!--<lower>0</lower>-->
+            <!--<upper>1</upper>-->
+		<!--</objective>-->
+
+		<!--<objective>-->
+			<!--<name>Under Prediction</name>-->
+			<!--<weight>-1.0</weight>-->
+			<!--<achievable>0.25</achievable>-->
+			<!--<goal>0.1</goal>-->
+			<!--<evaluationFunction>objective2EvalFunction</evaluationFunction>-->
+			<!--<lower>0</lower>-->
+            <!--<upper>1</upper>-->
+		<!--</objective>-->
+
+		<objective>
+            <name>Num Elements</name>
+            <weight>-1.0</weight>
+            <achievable>100.0</achievable>
+            <goal>0</goal>
+            <evaluationFunction>num_elements_eval_function</evaluationFunction>
+            <lower>0</lower>
+            <upper>1</upper>
+        </objective>
+
+		<objective>
+			<name>Probability of Miss</name>
+			<weight>-1.0</weight>
+			<achievable>0.02</achievable>
+			<goal>0.005</goal>
+			<evaluationFunction>objective4EvalFunction</evaluationFunction>
+			<lower>0</lower>
+            <upper>1</upper>
+		</objective>
+
+		<!--<objective>-->
+			<!--<name>Percent Error</name>-->
+			<!--<weight>-1.0</weight>-->
+			<!--<achievable>0.02</achievable>-->
+			<!--<goal>0.005</goal>-->
+			<!--<evaluationFunction>objective5EvalFunction</evaluationFunction>-->
+			<!--<lower>0</lower>-->
+            <!--<upper>1</upper>-->
+		<!--</objective>-->
+
+		<objective>
+			<name>Valid Percent Error</name>
+			<weight>-1.0</weight>
+			<achievable>0.02</achievable>
+			<goal>0.005</goal>
+			<evaluationFunction>objective6EvalFunction</evaluationFunction>
+			<lower>0</lower>
+            <upper>1</upper>
+		</objective>
+
+		<objective>
+			<name>Valid Over Prediction</name>
+			<weight>-1.0</weight>
+			<achievable>0.3</achievable>
+			<goal>0.05</goal>
+			<evaluationFunction>objective8EvalFunction</evaluationFunction>
+			<lower>0</lower>
+            <upper>1</upper>
+		</objective>
+
+		<objective>
+			<name>Valid Under Prediction</name>
+			<weight>-1.0</weight>
+			<achievable>0.25</achievable>
+			<goal>0.05</goal>
+			<evaluationFunction>objective9EvalFunction</evaluationFunction>
+			<lower>0</lower>
+            <upper>1</upper>
+		</objective>
+
+		<objective>
+			<name>False Positive Bottom</name>
+            <weight>-1.0</weight>
+            <achievable>20</achievable>
+            <goal>0</goal>
+            <evaluationFunction>objective11EvalFunction</evaluationFunction>
+            <lower>0</lower>
+            <upper>1</upper>
+		</objective>
+
+		<objective>
+			<name>False Negative Bottom</name>
+            <weight>-1.0</weight>
+            <achievable>20</achievable>
+            <goal>0</goal>
+            <evaluationFunction>objective12EvalFunction</evaluationFunction>
+            <lower>0</lower>
+            <upper>1</upper>
+		</objective>
+
+		<objective>
+			<name>Number of Invalid Individuals</name>
+            <weight>-1.0</weight>
+            <achievable>20</achievable>
+            <goal>0</goal>
+            <evaluationFunction>objective10EvalFunction</evaluationFunction>
+            <lower>0</lower>
+            <upper>1</upper>
+		</objective>
+
+	</objectives>
+
+	<evaluation>
+		<module>evalFunctions</module>
+		<memoryLimit>7680</memoryLimit> <!-- In MB -->
+	</evaluation>
+
+	<gridEngineParameters>
+        <numHosts>3</numHosts>
+        <workersPerHost>3</workersPerHost>
+        <project>EOSL</project>
+        <queue>all.q</queue>
+        <parallelEnv>gtmoep</parallelEnv>
+    </gridEngineParameters>
+
+	<evolutionParameters>
+		<initialPopulationSize>512</initialPopulationSize>
+		<elitePoolSize>512</elitePoolSize>
+		<launchSize>300</launchSize>
+		<minQueueSize>200</minQueueSize>
+		<outlierPenalty>0.2</outlierPenalty>
+		<matings>
+			<mating>
+				<name>crossover</name>
+				<probability>0.50</probability>
+			</mating>
+			<mating>
+				<name>crossoverEphemeral</name>
+				<probability>0.50</probability>
+			</mating>
+			<mating>
+				<name>headlessChicken</name>
+				<probability>0.10</probability>
+			</mating>
+			<mating>
+				<name>headlessChickenEphemeral</name>
+				<probability>0.10</probability>
+			</mating>
+		</matings>
+
+		<mutations>
+			<mutation>
+				<name>insert</name>
+				<probability>0.05</probability>
+			</mutation>
+			<mutation>
+				<name>insert modify</name>
+				<probability>0.05</probability>
+			</mutation>
+			<mutation>
+				<name>ephemeral</name>
+				<probability>0.25</probability>
+			</mutation>
+			<mutation>
+				<name>node replace</name>
+				<probability>0.05</probability>
+			</mutation>
+			<mutation>
+				<name>uniform</name>
+				<probability>0.05</probability>
+			</mutation>
+			<mutation>
+				<name>shrink</name>
+				<probability>0.05</probability>
+			</mutation>
+		</mutations>
+
+		<selections>
+			<selection>
+				<name>sel_nsga2</name>
+			</selection>
+		</selections>
+
+	</evolutionParameters>
+
+	<seedFile>
+		<!-- <filename>saved_runs/terminated_may_1/lastParents.txt</filename> -->
+		<filename>testCode/pickledTrees.dat</filename>
+	</seedFile>
+
+	<genePoolFitness>
+		<prefix>genePoolFitnessAdult</prefix>
+    </genePoolFitness>
+
+    <paretoFitness>
+        <prefix>paretoFitnessAdult</prefix>
+    </paretoFitness>
+
+    <parentsOutput>
+        <prefix>parentsAdult</prefix>
+    </parentsOutput>
+
+	<paretoOutput>
+		<prefix>paretoFitness</prefix>
+	</paretoOutput>
+
+	<regression>1</regression>
+
+</input>

@@ -1,0 +1,205 @@
+<?xml version="1.0"?>
+<input>
+    <pythonConfig>
+        <localPythonCommand>python</localPythonCommand> <!--e.g. python3 -->
+        <gridPythonPath>/users/USER/.conda/envs/pace-env/bin/python</gridPythonPath>
+        <slurmPythonPathMaster>/home/USER/.conda/envs/pace-env/bin/python</slurmPythonPathMaster>
+        <slurmPythonPathWorker>/home/USER/.conda/envs/pace-env/bin/python</slurmPythonPathWorker>
+        <pacePythonPath>~/.conda/envs/pace-env/bin/python</pacePythonPath>
+    </pythonConfig>
+
+     <dbConfig>
+        <server>localhost</server>
+        <username>root</username>
+        <password></password>
+        <database>test</database>
+        <reuse>1</reuse>
+    </dbConfig>
+    <cacheConfig>
+        <useCache>false</useCache>
+        <masterWaitTime>60</masterWaitTime>
+        <central>true</central>
+        <compression>false</compression>
+        <cacheLimit>10000000</cacheLimit>
+        <timeThreshold>0</timeThreshold>
+        <timeout>3000</timeout>
+    </cacheConfig>
+    <datasets>
+        <dataset>
+            <name>FullDataSet</name>
+            <type>textdata</type>
+            <reduceInstances>1</reduceInstances>
+            <MonteCarlo>
+                <trial>
+                    <trainFilename>datasets/amazon/train.csv.gz</trainFilename>
+                    <testFilename>datasets/amazon/test.csv.gz</testFilename>
+                </trial>
+            </MonteCarlo>
+        </dataset>
+    </datasets>
+
+    <objectives>
+        <objective>
+            <name>Accuracy Error</name>
+            <weight>-1.0</weight>
+            <achievable>0.1</achievable>
+            <goal>0</goal>
+            <evaluationFunction>accuracy_score</evaluationFunction>
+            <lower>0</lower>
+            <upper>1</upper>
+        </objective>
+
+        <objective>
+            <name>Precision Error</name>
+            <weight>-1.0</weight>
+            <achievable>0.1</achievable>
+            <goal>0</goal>
+            <evaluationFunction>precision_min</evaluationFunction>
+            <lower>0</lower>
+            <upper>1</upper>
+        </objective>
+
+        <objective>
+            <name>Recall Error</name>
+            <weight>-1.0</weight>
+            <achievable>0.1</achievable>
+            <goal>0</goal>
+            <evaluationFunction>recall_min</evaluationFunction>
+            <lower>0</lower>
+            <upper>1</upper>
+        </objective>
+
+        <!-- <objective>
+            <name>Num Parameters</name>
+            <weight>-1.0</weight>
+            <achievable>50000.0</achievable>
+            <goal>0</goal>
+            <evaluationFunction>num_params</evaluationFunction>
+            <lower>0</lower>
+            <upper>1000000000</upper>
+        </objective> -->
+        
+    </objectives>
+
+    <evaluation>
+        <module>eval_methods</module>
+        <memoryLimit>24000</memoryLimit> <!-- In Percent,  -->
+    </evaluation>
+    <localRunParameters>
+        <workersPerHost>1</workersPerHost>
+    </localRunParameters>
+    <paceEngineParameters>
+        <queue>pace-ice</queue> <!--pace-ice is default, pace-ice-gpu to use V100s. NOTE: This will force your workersPerHost value to 1 to prevent them from competing for same hardware. Using multiple hosts still causes some GPU issues though-->
+        <walltime>8:00:00</walltime> <!-- 8 hours is the limit as of Fall 2021 -->
+        <modules>jdk/1.8.0_202 openmpi/3.1.6 gcc anaconda3/2020.02 cuda/11.1</modules> <!--space delimited list of module names -->
+        <numHosts>3</numHosts>
+        <workersPerHost>4</workersPerHost>
+        <ramPerHostCPU>8GB</ramPerHostCPU>
+        <ramPerMasterCPU>8GB</ramPerMasterCPU>
+    </paceEngineParameters>    
+    <slurmEngineParameters>
+        <numHosts>3</numHosts>
+        <workersPerHost>3</workersPerHost>
+          <jobName>emade.toxicity</jobName>
+          <runtime>5-01:00</runtime> <!--Optional runtime in D-HH:MM -->
+          <modules>anaconda3/2020.2 cuda/10</modules> <!--space delimited list of module names -->
+        <otherHardwareRequestString></otherHardwareRequestString> <!--e.g request specific GPU-->
+          <memoryToAlloc>24</memoryToAlloc> <!--mem-per-cpu in GB-->
+        <specificNode></specificNode>
+        <anacondaEnvironmentMaster>emade</anacondaEnvironmentMaster>
+        <anacondaEnvironmentWorker>emade</anacondaEnvironmentWorker>
+        <numberOfGPUs>1</numberOfGPUs>
+    </slurmEngineParameters>
+    <gridEngineParameters>
+        <numHosts>15</numHosts>
+        <workersPerHost>3</workersPerHost>
+        <project>EOSL</project>
+        <queue>all.q</queue>
+        <parallelEnv>emade</parallelEnv>
+    </gridEngineParameters>
+    <!-- <evolutionParameters>
+        <initialPopulationSize>64</initialPopulationSize>
+        <elitePoolSize>64</elitePoolSize>
+        <launchSize>32</launchSize>
+        <minQueueSize>12</minQueueSize> -->
+    <evolutionParameters>
+        <initialPopulationSize>256</initialPopulationSize>
+        <elitePoolSize>256</elitePoolSize>
+        <launchSize>128</launchSize>
+        <minQueueSize>12</minQueueSize>
+        <outlierPenalty>0.2</outlierPenalty>
+
+        <matings>
+            <mating>
+                <name>crossover</name>
+                <probability>0.50</probability>
+            </mating>
+            <mating>
+                <name>crossoverEphemeral</name>
+                <probability>0.50</probability>
+            </mating>
+            <mating>
+                <name>headlessChicken</name>
+                <probability>0.10</probability>
+            </mating>
+            <mating>
+                <name>headlessChickenEphemeral</name>
+                <probability>0.10</probability>
+            </mating>
+        </matings>
+
+        <mutations>
+            <mutation>
+                <name>insert</name>
+                <probability>0.5</probability>
+            </mutation>
+            <mutation>
+                <name>insert modify</name>
+                <probability>0.10</probability>
+            </mutation>
+            <mutation>
+                <name>ephemeral</name>
+                <probability>0.25</probability>
+            </mutation>
+            <mutation>
+                <name>node replace</name>
+                <probability>0.5</probability>
+            </mutation>
+            <mutation>
+                <name>uniform</name>
+                <probability>0.05</probability>
+            </mutation>
+            <mutation>
+                <name>shrink</name>
+                <probability>0.05</probability>
+            </mutation>
+        </mutations>
+
+        <selections>
+            <selection>
+                <name>sel_nsga2</name>
+            </selection>
+        </selections>
+
+    </evolutionParameters>
+    <seedFile>
+        <!-- <filename>saved_runs/terminated_may_1/lastParents.txt</filename> -->
+        <!-- <filename>testCode/pickledTrees.dat</filename> -->
+    </seedFile>
+
+    <genePoolFitness>
+        <prefix>genePoolFitnessAmazon</prefix>
+    </genePoolFitness>
+    <paretoFitness>
+        <prefix>paretoFitnessAmazon</prefix>
+    </paretoFitness>
+    <parentsOutput>
+        <prefix>parentsAmazon</prefix>
+    </parentsOutput>
+
+
+
+    <paretoOutput>
+        <prefix>paretoFrontAmazon</prefix>
+    </paretoOutput>
+</input>

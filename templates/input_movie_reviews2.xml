@@ -1,0 +1,188 @@
+<?xml version="1.0"?>
+
+<input>
+    <pythonConfig>
+        <localPythonCommand>python</localPythonCommand> <!--e.g. python3 -->
+        <gridPythonPath>/users/USER/anaconda3/envs/ENVIRO_NAME/bin/python</gridPythonPath>
+      <slurmPythonPathMaster>/home/USER/.conda/envs/ENVIRO_NAME/bin/python</slurmPythonPathMaster>
+      <slurmPythonPathWorker>/home/USER/.conda/envs/ENVIRO_NAME/bin/python</slurmPythonPathWorker>
+    </pythonConfig>
+    <dbConfig>
+        <server>remotemysql.com</server>
+        <username>Qpb9wK5rkb</username>
+        <password>XrIwmcIe9H</password>
+        <database>Qpb9wK5rkb</database>
+        <reuse>0</reuse>
+    </dbConfig>
+    <cacheConfig>
+        <useCache>false</useCache>
+        <central>true</central>
+        <compression>false</compression>
+        <cacheLimit>10000000</cacheLimit>
+        <timeThreshold>0</timeThreshold>
+        <timeout>300</timeout>
+    </cacheConfig>
+    <datasets>
+        <dataset>
+            <name>FullDataSet</name>
+            <type>textdata</type>
+            <MonteCarlo>
+                <trial>
+                    <trainFilename>datasets/movie_reviews/train.csv.gz</trainFilename>
+                    <testFilename>datasets/movie_reviews/test.csv.gz</testFilename>
+                </trial>
+            </MonteCarlo>
+        </dataset>
+    </datasets>
+
+    <objectives>
+        <objective>
+            <name>False Positives</name>
+            <weight>-1.0</weight>
+            <achievable>300</achievable>
+            <goal>0</goal>
+            <evaluationFunction>false_positive</evaluationFunction>
+            <lower>0</lower>
+            <upper>300</upper>
+        </objective>
+        <objective>
+            <name>False Negatives</name>
+            <weight>-1.0</weight>
+            <achievable>300</achievable>
+            <goal>0</goal>
+            <evaluationFunction>false_negative</evaluationFunction>
+            <lower>0</lower>
+            <upper>300</upper>
+        </objective>
+
+         <!-- <objective>
+            <name>Accuracy Score</name>
+            <weight>-1.0</weight>
+            <achievable>0.2</achievable>
+            <goal>0</goal>
+            <evaluationFunction>accuracy_score</evaluationFunction>
+            <lower>0</lower>
+            <upper>1</upper>
+        </objective>
+
+        <objective>
+            <name>Num Elements</name>
+            <weight>-1.0</weight>
+            <achievable>100.0</achievable>
+            <goal>0</goal>
+            <evaluationFunction>num_elements_eval_function</evaluationFunction>
+            <lower>10</lower>
+            <upper>100</upper>
+        </objective> -->
+
+    </objectives>
+
+    <evaluation>
+        <module>eval_methods</module>
+        <memoryLimit>30</memoryLimit> <!-- In Percent,  -->
+    </evaluation>
+    <localRunParameters>
+        <workersPerHost>5</workersPerHost>
+    </localRunParameters>
+    <slurmEngineParameters>
+        <numHosts>3</numHosts>
+        <workersPerHost>3</workersPerHost>
+          <jobName>emade.movie_reviews</jobName>
+          <runtime>3-01:00</runtime> <!--Optional runtime in D-HH:MM -->
+          <modules>python/3.7.3 anaconda3/4.4.0 cuda/9</modules> <!--space delimited list of module names -->
+        <otherHardwareRequestString></otherHardwareRequestString> <!--e.g request specific GPU-->
+          <memoryToAlloc>8</memoryToAlloc> <!--mem-per-cpu in GB-->
+        <specificNode></specificNode>
+        <anacondaEnvironmentMaster>emade</anacondaEnvironmentMaster>
+        <anacondaEnvironmentWorker>emade</anacondaEnvironmentWorker>
+        <numberOfGPUs>1</numberOfGPUs>
+    </slurmEngineParameters>
+    <gridEngineParameters>
+        <numHosts>15</numHosts>
+        <workersPerHost>3</workersPerHost>
+        <project>EOSL</project>
+        <queue>all.q</queue>
+        <parallelEnv>emade</parallelEnv>
+    </gridEngineParameters>
+
+    <evolutionParameters>
+        <initialPopulationSize>512</initialPopulationSize>
+        <elitePoolSize>512</elitePoolSize>
+        <launchSize>300</launchSize>
+          <minQueueSize>200</minQueueSize>
+        <outlierPenalty>0.2</outlierPenalty>
+
+        <matings>
+            <mating>
+                <name>crossover</name>
+                <probability>0.50</probability>
+            </mating>
+            <mating>
+                <name>crossoverEphemeral</name>
+                <probability>0.50</probability>
+            </mating>
+            <mating>
+                <name>headlessChicken</name>
+                <probability>0.10</probability>
+            </mating>
+            <mating>
+                <name>headlessChickenEphemeral</name>
+                <probability>0.10</probability>
+            </mating>
+        </matings>
+
+        <mutations>
+            <mutation>
+                <name>insert</name>
+                <probability>0.05</probability>
+            </mutation>
+            <mutation>
+                <name>insert modify</name>
+                <probability>0.10</probability>
+            </mutation>
+            <mutation>
+                <name>ephemeral</name>
+                <probability>0.25</probability>
+            </mutation>
+            <mutation>
+                <name>node replace</name>
+                <probability>0.05</probability>
+            </mutation>
+            <mutation>
+                <name>uniform</name>
+                <probability>0.05</probability>
+            </mutation>
+            <mutation>
+                <name>shrink</name>
+                <probability>0.05</probability>
+            </mutation>
+        </mutations>
+
+        <selections>
+            <selection>
+                <name>sel_nsga2</name>
+            </selection>
+        </selections>
+
+    </evolutionParameters>
+    <seedFile>
+        <!-- <filename>saved_runs/terminated_may_1/lastParents.txt</filename> -->
+        <!-- <filename>testCode/pickledTrees.dat</filename> -->
+    </seedFile>
+
+    <genePoolFitness>
+        <prefix>genePoolFitnessMovieReviews</prefix>
+    </genePoolFitness>
+    <paretoFitness>
+        <prefix>paretoFitnessMovieReviews</prefix>
+    </paretoFitness>
+    <parentsOutput>
+        <prefix>parentsMovieReviews</prefix>
+    </parentsOutput>
+
+
+
+    <paretoOutput>
+        <prefix>paretoFrontMovieReviews</prefix>
+    </paretoOutput>
+</input>

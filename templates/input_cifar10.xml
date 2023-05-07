@@ -1,0 +1,199 @@
+<?xml version="1.0"?>
+
+<input>
+    <pythonConfig>
+	<localPythonCommand>python</localPythonCommand> <!--e.g. python3 -->
+	<gridPythonPath>/users/USER/anaconda3/envs/ENVIRO_NAME/bin/python</gridPythonPath>
+        <slurmPythonPathMaster>/users/USER/anaconda3/envs/ENVIRO_NAME/bin/python</slurmPythonPathMaster>
+        <slurmPythonPathWorker>/users/USER/anaconda3/envs/ENVIRO_NAME/bin/python</slurmPythonPathWorker>
+        <pacePythonPath>~/.conda/envs/CONDA_ENVIRONMENT_NAME/bin/python</pacePythonPath>
+    </pythonConfig>
+    <dbConfig>
+        <server>atl1-1-02-012-5-l:PORT_NUMBER</server>
+        <username>cburdell3</username>
+        <password>PACE_SQL_PASSWORD</password>
+        <database>cifar10</database>
+        <reuse>0</reuse>
+    </dbConfig>
+    <cacheConfig>
+        <useCache>false</useCache>
+        <masterWaitTime>60</masterWaitTime>
+        <central>true</central>
+        <compression>false</compression>
+        <cacheLimit>10000000</cacheLimit>
+        <timeThreshold>0</timeThreshold>
+        <timeout>300</timeout>
+    </cacheConfig>
+
+    <datasets>
+        <dataset>
+        <name>FullDataSet</name>
+	    <type>imagedata</type>
+        <pickle>true</pickle>
+            <MonteCarlo>
+                <trial>
+		    <trainFilename>datasets/cifar10/emade_train_cifar10_0.npz</trainFilename>
+                <testFilename>datasets/cifar10/emade_test_cifar10_0.npz</testFilename>
+	        </trial>
+            </MonteCarlo>
+        </dataset>
+    </datasets>
+
+    <objectives>                                                                
+        <objective>
+            <name>Accuracy Error</name>
+            <weight>-1.0</weight>
+            <achievable>0.1</achievable>
+            <goal>0</goal>
+            <evaluationFunction>accuracy_score</evaluationFunction>
+            <lower>0</lower>
+            <upper>1</upper>
+        </objective>
+
+        <objective>
+            <name>Precision Error</name>
+            <weight>-1.0</weight>
+            <achievable>0.1</achievable>
+            <goal>0</goal>
+            <evaluationFunction>precision_min</evaluationFunction>
+            <lower>0</lower>
+            <upper>1</upper>
+        </objective>
+
+        <objective>
+            <name>Recall Error</name>
+            <weight>-1.0</weight>
+            <achievable>0.1</achievable>
+            <goal>0</goal>
+            <evaluationFunction>recall_min</evaluationFunction>
+            <lower>0</lower>
+            <upper>1</upper>
+        </objective>
+
+    </objectives>
+
+    <evaluation>
+        <module>eval_methods</module>
+        <memoryLimit>24000</memoryLimit> <!-- In MB,  -->
+    </evaluation>
+    <localRunParameters>
+        <workersPerHost>1</workersPerHost>
+    </localRunParameters>
+    <paceEngineParameters>
+        <queue>pace-ice</queue> <!--pace-ice is default, pace-ice-gpu to use V100s. NOTE: This will force your workersPerHost value to 1 to prevent them from competing for same hardware-->
+        <walltime>8:00:00</walltime> <!-- 8 hours is the limit as of Fall 2021 -->
+        <modules>jdk/1.8.0_202 openmpi/3.1.6 gcc anaconda3/2020.02 cuda/11.1</modules> <!--space delimited list of module names -->
+        <numHosts>4</numHosts>
+        <workersPerHost>4</workersPerHost>
+        <ramPerHostCPU>8GB</ramPerHostCPU>
+        <ramPerMasterCPU>8GB</ramPerMasterCPU>
+    </paceEngineParameters> 
+    <slurmEngineParameters>
+        <numHosts>3</numHosts>
+        <workersPerHost>3</workersPerHost>
+	      <jobName>emade.cifar10</jobName>
+	      <runtime>5-01:00</runtime> <!--Optional runtime in D-HH:MM -->
+	      <modules>python/3.6.1 anaconda3/4.4.0 cuda/10.1</modules> <!--space delimited list of module names -->
+        <otherHardwareRequestString></otherHardwareRequestString> <!--e.g request specific GPU-->
+	      <memoryToAlloc>24</memoryToAlloc> <!--mem-per-cpu in GB-->
+        <specificNode></specificNode>
+        <anacondaEnvironmentMaster>emade</anacondaEnvironmentMaster>
+        <anacondaEnvironmentWorker>emade</anacondaEnvironmentWorker>
+	<numberOfGPUs>3</numberOfGPUs>
+    </slurmEngineParameters>
+    <gridEngineParameters>
+        <numHosts>15</numHosts>
+        <workersPerHost>3</workersPerHost>
+        <project>EOSL</project>
+        <queue>all.q</queue>
+        <parallelEnv>emade</parallelEnv>
+    </gridEngineParameters>
+
+    <evolutionParameters>
+        <initialPopulationSize>100</initialPopulationSize>
+        <elitePoolSize>100</elitePoolSize>
+        <launchSize>40</launchSize>
+	    <minQueueSize>16</minQueueSize>
+        <outlierPenalty>0.2</outlierPenalty>
+
+        <matings>
+            <mating>
+                <name>crossover</name>
+                <probability>0.50</probability>
+            </mating>
+            <mating>
+                <name>crossoverEphemeral</name>
+                <probability>0.50</probability>
+            </mating>
+            <mating>
+                <name>headlessChicken</name>
+                <probability>0.10</probability>
+            </mating>
+            <mating>
+                <name>headlessChickenEphemeral</name>
+                <probability>0.10</probability>
+            </mating>
+        </matings>
+
+        <mutations>
+            <mutation>
+                <name>insert</name>
+                <probability>0.05</probability>
+            </mutation>
+            <mutation>
+                <name>insert modify</name>
+                <probability>0.10</probability>
+            </mutation>
+            <mutation>
+                <name>ephemeral</name>
+                <probability>0.25</probability>
+            </mutation>
+            <mutation>
+                <name>node replace</name>
+                <probability>0.05</probability>
+            </mutation>
+            <mutation>
+                <name>uniform</name>
+                <probability>0.05</probability>
+            </mutation>
+            <mutation>
+                <name>shrink</name>
+                <probability>0.05</probability>
+            </mutation>
+        </mutations>
+
+        <selections>
+            <selection>
+                <name>sel_nsga2_novelty</name>
+		<useDynamicArgs>true</useDynamicArgs>
+		<args>
+			<arg>
+				<name>n</name>
+				<val>3</val>
+			</arg>
+		</args>
+            </selection>
+    </selections>
+
+    </evolutionParameters>
+	<seedFile>
+		<!-- <filename>saved_runs/terminated_may_1/lastParents.txt</filename> -->
+		<!-- <filename>testCode/pickledTrees.dat</filename> -->
+	</seedFile>
+
+    <genePoolFitness>
+        <prefix>genePoolFitnessCIFAR</prefix>
+    </genePoolFitness>
+    <paretoFitness>
+        <prefix>paretoFitnessCIFAR</prefix>
+    </paretoFitness>
+    <parentsOutput>
+        <prefix>parentsCIFAR</prefix>
+    </parentsOutput>
+
+
+
+    <paretoOutput>
+        <prefix>paretoFrontCIFAR</prefix>
+    </paretoOutput>
+</input>

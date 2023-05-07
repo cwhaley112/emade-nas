@@ -1,0 +1,213 @@
+<?xml version="1.0"?>
+
+<input>
+    <pythonConfig>
+        <localPythonCommand>python</localPythonCommand>
+        <gridPythonPath>/home/adunn39-gtri/anaconda3/pthon</gridPythonPath>
+        <slurmPythonPathMaster>/home/adunn39-gtri/.conda/envs/tensorflow_env/bin/python3</slurmPythonPathMaster>
+        <slurmPythonPathWorker>/home/adunn39-gtri/.conda/envs/tensorflow_env/bin/python3</slurmPythonPathWorker>
+    </pythonConfig>
+    <dbConfig>
+        <server></server>
+        <username></username>
+        <password></password>
+        <database></database>
+        <reuse>0</reuse>
+    </dbConfig>
+    <cacheConfig>
+  		<useCache>false</useCache>
+      <masterWaitTime>60</masterWaitTime>
+  		<central>true</central>
+      <compression>false</compression>
+  		<cacheLimit>10000000</cacheLimit>
+  		<timeThreshold>0</timeThreshold>
+      <timeout>300</timeout>
+  	</cacheConfig>
+    <datasets>
+        <dataset>
+            <name>SmallDataSet</name>
+            <type>featuredata</type>
+            <MonteCarlo>
+                <trial>
+                    <trainFilename>datasets/adult/small_slice/vectorized_adult_data_set_train_0_small.dat.gz</trainFilename>
+                    <testFilename>datasets/adult/small_slice/vectorized_adult_data_set_test_0_small.dat.gz</testFilename>
+                </trial>
+            </MonteCarlo>
+        </dataset>
+        <dataset>
+            <name>FullDataSet</name>
+            <type>featuredata</type>
+            <MonteCarlo>
+                <trial>
+                    <trainFilename>datasets/adult/vectorized_adult_data_set_train_0.dat.gz</trainFilename>
+                    <testFilename>datasets/adult/vectorized_adult_data_set_test_0.dat.gz</testFilename>
+                </trial>
+                <trial>
+                    <trainFilename>datasets/adult/vectorized_adult_data_set_train_1.dat.gz</trainFilename>
+                    <testFilename>datasets/adult/vectorized_adult_data_set_test_1.dat.gz</testFilename>
+                </trial>
+                <trial>
+                    <trainFilename>datasets/adult/vectorized_adult_data_set_train_2.dat.gz</trainFilename>
+                    <testFilename>datasets/adult/vectorized_adult_data_set_test_2.dat.gz</testFilename>
+                </trial>
+                <trial>
+                    <trainFilename>datasets/adult/vectorized_adult_data_set_train_3.dat.gz</trainFilename>
+                    <testFilename>datasets/adult/vectorized_adult_data_set_test_3.dat.gz</testFilename>
+                </trial>
+                <trial>
+                    <trainFilename>datasets/adult/vectorized_adult_data_set_train_4.dat.gz</trainFilename>
+                    <testFilename>datasets/adult/vectorized_adult_data_set_test_4.dat.gz</testFilename>
+                </trial>
+            </MonteCarlo>
+        </dataset>
+    </datasets>
+
+    <objectives>
+        <objective>
+            <name>False Positives</name>
+            <weight>-1.0</weight>
+            <achievable>4971.8</achievable>
+            <goal>0</goal>
+            <evaluationFunction>false_positive</evaluationFunction>
+            <lower>0</lower>
+            <upper>1</upper>
+        </objective>
+        <objective>
+            <name>False Negatives</name>
+            <weight>-1.0</weight>
+            <achievable>1541.2</achievable>
+            <goal>0</goal>
+            <evaluationFunction>false_negative</evaluationFunction>
+            <lower>0</lower>
+            <upper>1</upper>
+        </objective>
+
+        <!--<objective>
+            <name>Length</name>
+            <weight>-1.0</weight>
+            <achievable>10.0</achievable>
+            <goal>0</goal>
+            <evaluationFunction>depth_breadth_eval_function</evaluationFunction>
+        </objective>-->
+
+        <objective>
+            <name>Num Elements</name>
+            <weight>-1.0</weight>
+            <achievable>100.0</achievable>
+            <goal>0</goal>
+            <evaluationFunction>num_elements_eval_function</evaluationFunction>
+            <lower>0</lower>
+            <upper>1</upper>
+        </objective>
+
+    </objectives>
+
+    <evaluation>
+        <module>eval_methods</module>
+        <memoryLimit>8000</memoryLimit> <!-- In MB -->
+    </evaluation>
+    <localRunParameters>
+      <workersPerHost>4</workersPerHost>
+    </localRunParameters>
+    <slurmEngineParameters>
+      <numHosts>6</numHosts>
+      <workersPerHost>3</workersPerHost>
+      <jobName>emade.test</jobName>
+      <runtime>0-06:00</runtime> <!--Optional runtime in D-HH:MM -->
+      <modules>python/3.6.1 anaconda3/4.4.0</modules> <!--space delimited list of module names -->
+      <otherHardwareRequestString></otherHardwareRequestString> <!--e.g request specific GPU-->
+      <memoryToAlloc>8</memoryToAlloc> <!--mem-per-cpu in GB-->
+      <specificNode></specificNode>
+      <anacondaEnvironmentMaster>tensorflow_env</anacondaEnvironmentMaster>
+      <anacondaEnvironmentWorker>tensorflow_env</anacondaEnvironmentWorker>
+      <numberOfGPUs>0</numberOfGPUs>
+    </slurmEngineParameters>
+    <gridEngineParameters>
+      <numHosts>2</numHosts>
+      <workersPerHost>3</workersPerHost>
+      <project>EOSL</project>
+      <queue>all.q</queue>
+      <parallelEnv>emade</parallelEnv>
+    </gridEngineParameters>
+
+    <evolutionParameters>
+        <initialPopulationSize>512</initialPopulationSize>
+        <elitePoolSize>512</elitePoolSize>
+        <launchSize>300</launchSize>
+        <minQueueSize>200</minQueueSize>
+        <outlierPenalty>0.2</outlierPenalty>
+
+        <matings>
+            <mating>
+                <name>crossover</name>
+                <probability>0.50</probability>
+            </mating>
+            <mating>
+                <name>crossoverEphemeral</name>
+                <probability>0.50</probability>
+            </mating>
+            <mating>
+                <name>headlessChicken</name>
+                <probability>0.10</probability>
+            </mating>
+            <mating>
+                <name>headlessChickenEphemeral</name>
+                <probability>0.10</probability>
+            </mating>
+        </matings>
+
+        <mutations>
+            <mutation>
+                <name>insert</name>
+                <probability>0.05</probability>
+            </mutation>
+            <mutation>
+                <name>insert modify</name>
+                <probability>0.10</probability>
+            </mutation>
+            <mutation>
+                <name>ephemeral</name>
+                <probability>0.25</probability>
+            </mutation>
+            <mutation>
+                <name>node replace</name>
+                <probability>0.05</probability>
+            </mutation>
+            <mutation>
+                <name>uniform</name>
+                <probability>0.05</probability>
+            </mutation>
+            <mutation>
+                <name>shrink</name>
+                <probability>0.05</probability>
+            </mutation>
+        </mutations>
+
+        <selections>
+            <selection>
+                <name>NSGA2</name>
+            </selection>
+        </selections>
+
+    </evolutionParameters>
+
+    <seedFile>
+
+    </seedFile>
+
+    <genePoolFitness>
+        <prefix>genePoolFitnessAdult</prefix>
+    </genePoolFitness>
+    <paretoFitness>
+        <prefix>paretoFitnessAdult</prefix>
+    </paretoFitness>
+    <parentsOutput>
+        <prefix>parentsAdult</prefix>
+    </parentsOutput>
+
+
+
+    <paretoOutput>
+        <prefix>paretoFrontAdult</prefix>
+    </paretoOutput>
+</input>
